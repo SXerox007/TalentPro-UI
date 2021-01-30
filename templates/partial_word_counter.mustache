@@ -1,0 +1,52 @@
+<<define "partial_word_counter">>
+<div id="app">
+  <input type="text" v-model="url"/> 
+<button onclick="myFunction()">Submit</button>
+</div>
+<h5><b>URL to be captured: {{url}}</b></h5>
+
+
+<md-table>
+<md-table-body>
+<md-table-row v-for="(cdetails, index) in data">
+<input type="text" :value="index" readonly="readonly"/> {{cdetails}}
+</md-table-row>
+</md-table-body>
+</md-table>
+
+
+<script>
+var myObject = new Vue({
+  el: '#app',
+  data: {
+      url: '',
+      data:[]
+    }
+})
+
+function myFunction() {
+   console.log('URL:',myObject.url);
+    var url = 'http://localhost:50051/talentpro/1/url-crawl?url='+myObject.url; 
+    http('GET',url,null,function (resp) {
+        console.log('Response',resp);
+        myObject.data = resp.data
+        console.log('Data',myObject.data)
+        //myObject.url = '';
+    });   
+}
+
+function http(method, url, data, cb){
+    console.log('Here at Http ajax call');
+            var _this = this;
+            $.ajax({
+                    url: url,
+                    data: data?JSON.stringify(data):null,
+                    dataType: "json",
+                    contentType: "application/json",
+                            type: method,
+                            success: cb
+            });
+}          
+</script>
+
+<<end>>
